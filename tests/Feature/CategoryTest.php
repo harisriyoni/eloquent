@@ -62,7 +62,7 @@ class CategoryTest extends TestCase
         $categories->each(function($category){
             self::assertNull($category->description);
         });
-        $category->description = "udpated";
-        $category->save();
+        $category->description = "update";
+        $category->update();
     }
 }
