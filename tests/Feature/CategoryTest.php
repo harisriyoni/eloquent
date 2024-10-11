@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use Database\Seeders\CategorySeeder;
 
+use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertTrue;
 use Tests\TestCase;
@@ -47,5 +48,20 @@ class CategoryTest extends TestCase
         $category->name = "FOOD Update";
         $result = $category->update();
         self::assertTrue($result);
+    }
+
+    public function testSelect(){
+        for ($i=0; $i < 5; $i++) {
+            $category = new Category();
+            $category->id = "ID $i";
+            $category->name = "name $i";
+            $category->save();
+        }
+        $categories = Category::query()->whereNull("description")->get();
+        self::assertEquals(5, $categories->count());
+        $categories->each(function($category){
+            self::assertNull($category->description);
+        });
+
     }
 }
