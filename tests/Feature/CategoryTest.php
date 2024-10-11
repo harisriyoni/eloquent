@@ -51,7 +51,7 @@ class CategoryTest extends TestCase
     }
 
     public function testSelect(){
-        for ($i=0; $i < 5; $i++) {
+        for ($i=10; $i < 15; $i++) {
             $category = new Category();
             $category->id = "ID $i";
             $category->name = "name $i";
@@ -62,6 +62,7 @@ class CategoryTest extends TestCase
         $categories->each(function($category){
             self::assertNull($category->description);
         });
-
+        $category->description = "udpated";
+        $category->save();
     }
 }
