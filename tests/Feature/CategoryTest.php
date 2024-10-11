@@ -65,4 +65,14 @@ class CategoryTest extends TestCase
         $category->description = "update";
         $category->update();
     }
+
+    public function testDelete(){
+        $this->seed(CategorySeeder::class);
+        $category = Category::find("ID 10");
+        $result = $category->delete();
+        self::assertTrue($result);
+
+        $total = Category::query()->count();
+        self::assertEquals(0, $total);
+    }
 }
