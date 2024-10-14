@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('vouchers', function (Blueprint $table) {
-            $table->id();
+            $table->uuid("id")->nullable(false)->primary();
+            $table->string("name", 100)->nullable(false);
+            $table->string("voucher_code", 200)->nullable(false);
             $table->timestamps();
+
         });
     }
 
