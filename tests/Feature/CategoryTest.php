@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Category;
 use Database\Seeders\CategorySeeder;
 use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNotEmpty;
+use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertTrue;
 use Tests\TestCase;
 
@@ -76,5 +78,32 @@ class CategoryTest extends TestCase
 
         $total = Category::query()->count();
         self::assertEquals(0, $total);
+    }
+    public function testCreatecategory(){
+        $request = [
+            "id"=> "Food",
+            "name"=> "food",
+            "description"=> "sample food"
+        ];
+
+        $category = Category::query()->create($request);
+        $category->save();
+
+        self::assertNotNull($category->id);
+    }
+
+    public function testUpdatefill(){
+        $this->seed(CategorySeeder::class);
+
+        $request = [
+            "name"=> "update bro untuk name",
+            "description"=> "update bro untuk description",
+
+        ];
+        $category = Category::query()->find("FOOD");
+        $category->fill($request);
+        $category->save();
+
+        assertNotNull($category->id);
     }
 }

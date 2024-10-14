@@ -11,11 +11,10 @@ class Category extends Model
     protected $primarykey = "id";
     protected $KeyType = "string";
     public $incrementing = false;
-    public $timestamp = false;
+    public $timestamps = false;
     protected $fillable = [
+        'id',
         'name',
         'description',
-        'created_at',
-        'updated_at',
     ];
 }
