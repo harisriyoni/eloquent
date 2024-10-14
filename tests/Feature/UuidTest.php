@@ -31,5 +31,7 @@ class UuidTest extends TestCase
         $voucher->delete();
         $voucher = Voucher::query()->where('name', 'Sample Voucher')->first();
         self::assertNull($voucher);
+        $voucher = Voucher::withTrashed()->where('name', 'Sample Voucher')->first();
+        self::assertNotNull($voucher);
     }
 }
