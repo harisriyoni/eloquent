@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Scopes\IsActiveScope;
 use Database\Seeders\CategorySeeder;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotNull;
+use function PHPUnit\Framework\assertNull;
 use function PHPUnit\Framework\assertTrue;
 use Tests\TestCase;
 
@@ -105,5 +107,19 @@ class CategoryTest extends TestCase
         $category->save();
 
         assertNotNull($category->id);
+    }
+
+    public function testGlobal(){
+        $category = new Category();
+        $category->id = "FOO";
+        $category->name = "Food";
+        $category->description = "Food Description";
+        $category->is_active = false;
+        $category->save();
+
+        $category = Category::find("FOO");
+        assertNull($category);
+        $category = Category::withoutGlobalScope([IsActiveScope::class])->find("FOO");
+        self::assertNotNull($category);
     }
 }
