@@ -4,8 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use Database\Seeders\CategorySeeder;
-
-use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertTrue;
 use Tests\TestCase;
@@ -34,15 +32,17 @@ class CategoryTest extends TestCase
         $total = Category::query()->count();
         assertEquals(10, $total);
     }
-    public function testFind(){
+    public function testFind()
+    {
         $this->seed(CategorySeeder::class);
         $category = Category::query()->find("FOOD");
         self::assertNotNull($category);
         self::assertEquals("FOOD", $category->id);
-        self::assertEquals("food",$category->name);
+        self::assertEquals("food", $category->name);
         self::assertEquals("FOOD Category", $category->description);
     }
-    public function testUpdate(){
+    public function testUpdate()
+    {
         $this->seed(CategorySeeder::class);
         $category = Category::find("FOOD");
         $category->name = "FOOD Update";
@@ -50,8 +50,9 @@ class CategoryTest extends TestCase
         self::assertTrue($result);
     }
 
-    public function testSelect(){
-        for ($i=10; $i < 15; $i++) {
+    public function testSelect()
+    {
+        for ($i = 10; $i < 15; $i++) {
             $category = new Category();
             $category->id = "ID $i";
             $category->name = "name $i";
@@ -59,14 +60,15 @@ class CategoryTest extends TestCase
         }
         $categories = Category::query()->whereNull("description")->get();
         self::assertEquals(5, $categories->count());
-        $categories->each(function($category){
+        $categories->each(function ($category) {
             self::assertNull($category->description);
         });
         $category->description = "update";
         $category->update();
     }
 
-    public function testDelete(){
+    public function testDelete()
+    {
         $this->seed(CategorySeeder::class);
         $category = Category::find("ID 10");
         $result = $category->delete();
