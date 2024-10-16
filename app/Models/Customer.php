@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
@@ -18,12 +19,18 @@ class Customer extends Model
     {
         return $this->hasOne(Wallet::class, "customer_id", "id");
     }
-    public function virtual_account(): HasOneThrough{
-        return $this->hasOneThrough([Wallet::class, VirtualAccount::class],
-        "customer_id", //fk on wallets table
-        "wallet_id", //fk on virtual account table
-        "id", // pk on costumer table
-        "id", //pk on wallet table
-    );
+    public function virtual_account(): HasOneThrough
+    {
+        return $this->hasOneThrough(VirtualAccount::class, Wallet::class,
+            'customer_id', // FK di tabel wallets (dari Wallet)
+            'wallet_id', // FK di tabel virtual accounts (dari VirtualAccount)
+            'id', // PK di tabel customers (dari Customer)
+            'id' // PK di tabel wallets (dari Wallet)
+        );
+    }
+
+    public function riviews(): HasMany
+    {
+        return $this->hasMany(Review::class, "customer_id", "id");
     }
 }
