@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -32,5 +33,9 @@ class Customer extends Model
     public function riviews(): HasMany
     {
         return $this->hasMany(Review::class, "customer_id", "id");
+    }
+
+    public function likes_products():BelongsToMany{
+        return $this->belongsToMany(Product::class, "customers_likes_products", "customer_id", "product_id");
     }
 }
