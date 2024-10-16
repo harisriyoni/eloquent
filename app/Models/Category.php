@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Category extends Model
 {
@@ -25,5 +26,11 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, "category_id", "id");
+    }
+    public function cheapest_products(): HasOne{
+        return $this->hasOne(Product::class, "category_id", "id")->oldest('price');
+    }
+    public function mostexpensive_products(): HasOne{
+        return $this->hasOne(Product::class, "category_id", "id")->latest('price');
     }
 }
