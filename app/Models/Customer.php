@@ -18,7 +18,7 @@ class Customer extends Model
     {
         return $this->hasOne(Wallet::class, "customer_id", "id");
     }
-    public function virtualAccount(): HasOneThrough{
+    public function virtual_account(): HasOneThrough{
         return $this->hasOneThrough([Wallet::class, VirtualAccount::class],
         "customer_id", //fk on wallets table
         "wallet_id", //fk on virtual account table

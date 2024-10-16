@@ -39,8 +39,8 @@ class CustomerTest extends TestCase
     public function testOneThourght(){
         $customer = Customer::query()->find("1");
         assertNotNull($customer);
-        $va = $customer->virtualAccount;
+        $va = $customer->virtual_account;
         self::assertNotNull($va);
-    //     self::assertEquals("BCA", $va->bank);
+        self::assertEquals("BCA", $va->bank);
     }
 }
