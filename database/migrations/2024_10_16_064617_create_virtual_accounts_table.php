@@ -15,7 +15,7 @@ return new class extends Migration
             $table->integerIncrements("id")->nullable(false);
             $table->string("bank", 100)->nullable(false);
             $table->string("va_number", 100)->nullable(false);
-            $table->unsignedInteger("wallet_id", 100)->nullable(false);
+            $table->unsignedInteger("wallet_id")->nullable(false);
             $table->foreign("wallet_id")->references("id")->on("wallets");
         });
     }
