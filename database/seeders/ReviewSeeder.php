@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Review;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,11 @@ class ReviewSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $review = new Review();
+        $review->product_id = 3;
+        $review->customer_id = 1;
+        $review->rating = 3;
+        $review->comment = "Lumayan";
+        $review->save();
     }
 }

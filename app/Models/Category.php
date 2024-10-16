@@ -38,7 +38,7 @@ class Category extends Model
     }
     public function reviews(): HasManyThrough
     {
-        return $this->hasManyThrough(Review::class, Product::class,
+        return $this->hasManyThrough(Review::class, Product::class, // dia punya banyak review dia melewati table product untuk mengakses
             "category_id", // on products table
             "product_id", //fk on review table
             "id", // pk on categories table

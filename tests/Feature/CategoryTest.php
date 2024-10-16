@@ -125,16 +125,24 @@ class CategoryTest extends TestCase
     //     self::assertNotNull($category);
     // }
 
-    public function testOneTOMany(){
-        // $this->seed(CategorySeeder::class);
+    // public function testOneTOMany(){
+    //     // $this->seed(CategorySeeder::class);
+    //     $category = Category::query()->find("FOOD");
+    //     assertNotNull($category);
+    //     $products = $category->products;
+    //     assertNotEmpty($products);
+    //     assertCount(5, $products);
+    //     assertEquals("Product 1", $products->first()->name);
+    //     $productNames = $products->pluck('name')->toArray();
+    //     assertNotEmpty($productNames);
+    //     assertEquals(["Product 1", "Product 2", "Product 3", "Product 4", "Product 5"], $productNames);
+    // }
+
+    public function testManyThrought(){
         $category = Category::query()->find("FOOD");
         assertNotNull($category);
-        $products = $category->products;
-        assertNotEmpty($products);
-        assertCount(5, $products);
-        assertEquals("Product 1", $products->first()->name);
-        $productNames = $products->pluck('name')->toArray();
-        assertNotEmpty($productNames);
-        assertEquals(["Product 1", "Product 2", "Product 3", "Product 4", "Product 5"], $productNames);
+        $review = $category->reviews;
+        assertNotNull($review);
+        assertCount(3, $review);
     }
 }
