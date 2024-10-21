@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->string("commentable_id", 100)->nullable(false);
-            $table->string("commentable_type", 100)->nullable(false);
+            $table->string("commentable_id", 100)->after("comment")->nullable(false);
+            $table->string("commentable_type", 100)->after("commentable_id")->nullable(false);
         });
     }
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Voucher extends Model
 {
@@ -29,4 +30,8 @@ class Voucher extends Model
     // {
     //     $builder->where("is_active", true);
     // }
+
+    public function comments():MorphMany{
+        return $this->morphMany(Comment::class, "commentable");
+    }
 }
