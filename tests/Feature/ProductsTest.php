@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -29,5 +30,12 @@ class ProductsTest extends TestCase
             assertNotNull($tag->id);
             assertNotNull($tag->name);
         }
+    }
+    public function testQueryRelation()
+    {
+        $category = Category::query()->find("FOOD");
+        assertNotNull($category);
+        $products = $category->products()->where('price', '=', 100)->get();
+        assertCount(1, $products);
     }
 }

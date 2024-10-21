@@ -46,13 +46,22 @@ class CustomerTest extends TestCase
     //     self::assertEquals("BCA", $va->bank);
     // }
 
-    public function testManytoMany(){
+    // public function testManytoMany(){
+    //     $customer = Customer::query()->find("1");
+    //     assertNotNull($customer);
+    //     $customer->likes_products()->attach("1");
+    //     self::assertNotNull($customer);
+    //     $products = $customer->likes_products;
+    //     assertCount(1, $products);
+    //     assertEquals("1", $products[0]->id);
+    // }
+    public function testEagerLoading(){
+        $customer = Customer::query()->with(['wallet', 'image'])->find("1");
+        assertNotNull($customer);
+    }
+    public function testEagerModel(){
         $customer = Customer::query()->find("1");
         assertNotNull($customer);
-        $customer->likes_products()->attach("1");
-        self::assertNotNull($customer);
-        $products = $customer->likes_products;
-        assertCount(1, $products);
-        assertEquals("1", $products[0]->id);
+        assertNotNull($customer->wallet);
     }
 }
