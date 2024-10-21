@@ -18,7 +18,8 @@ class Comment extends Model
         "title" => "Sample Title",
         "comment" => "Sample Comment",
     ];
-    public function commentabel():MorphTo{
+    public function commentable(): MorphTo
+    {
         return $this->morphTo();
     }
 }
