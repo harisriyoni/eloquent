@@ -2,12 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
+use Tests\TestCase;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Facades\Log;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
-use Tests\TestCase;
 
 class ProductsTest extends TestCase
 {
@@ -52,5 +53,11 @@ class ProductsTest extends TestCase
 
         $product = $product->toQuery()->where('price', 100)->get();
         assertEquals("1", $product[0]->id);
+    }
+    public function testSerialization(){
+        $product = Product::query()->get();
+        assertCount(5, $product);
+        $json = $product->toJson(JSON_PRETTY_PRINT);
+        Log::info($json);
     }
 }

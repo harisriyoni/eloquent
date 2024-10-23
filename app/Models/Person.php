@@ -12,6 +12,7 @@ class Person extends Model
     public $incrementing = true;
     public $timestamps = true;
     protected $cast =[
+        'address' => Address::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
