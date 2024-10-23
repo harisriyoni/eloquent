@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,37 +17,40 @@ class Customer extends Model
     protected $primaryKey = "id";
     protected $keyType = "string";
     public $incrementing = false;
-    public $timestamps = true;
+    public $timestamps = false;
     protected $with = ["wallet"];
 
     public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class, "customer_id", "id");
     }
-    public function virtual_account(): HasOneThrough
+
+    public function virtualAccount(): HasOneThrough
     {
-        return $this->hasOneThrough(VirtualAccount::class, Wallet::class,
-            'customer_id', // FK di tabel wallets (dari Wallet)
-            'wallet_id', // FK di tabel virtual accounts (dari VirtualAccount)
-            'id', // PK di tabel customers (dari Customer)
-            'id' // PK di tabel wallets (dari Wallet)
-        );
+        return $this->hasOneThrough(VirtualAccount::class, Wallet::class, "customer_id", "wallet_id", "id", "id");
     }
 
-    public function riviews(): HasMany
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, "customer_id", "id");
     }
 
-    public function likes_products(): BelongsToMany
+    public function likeProducts(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, "customers_likes_products", "customer_id", "product_id")->withPivot("created_at")->using(Like::class);
+        return $this->belongsToMany(Product::class, "customers_likes_products", "customer_id", "product_id")
+            ->withPivot("created_at")
+            ->using(Like::class);
     }
-    public function likes_products_last_week(): BelongsToMany
+
+    public function likeProductsLastWeek(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, "customers_likes_products", "customer_id", "product_id")->withPivot("created_at")->wherePivot("created_at", ">=", Date::Now()->addDays(-7))->using(Like::class);
+        return $this->belongsToMany(Product::class, "customers_likes_products", "customer_id", "product_id")
+            ->withPivot("created_at")
+            ->wherePivot("created_at", ">=", Date::now()->addDays(-7))
+            ->using(Like::class);
     }
-    public function image(): MorphOne
+
+    public function image():MorphOne
     {
         return $this->morphOne(Image::class, "imageable");
     }

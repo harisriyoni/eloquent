@@ -13,9 +13,9 @@ class VoucherSeeder extends Seeder
      */
     public function run(): void
     {
-        Voucher::query()->create([
-            'name'=> 'Sample Voucher',
-            'voucher_code'=> '12345',
+        Voucher::create([
+            'name' => 'Sample Voucher',
+            'voucher_code' => '12345'
         ]);
     }
 }

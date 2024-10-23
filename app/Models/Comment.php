@@ -13,11 +13,12 @@ class Comment extends Model
     protected $keyType = "int";
     public $incrementing = true;
     public $timestamps = true;
-//untuk mengatur default value
+
     protected $attributes = [
         "title" => "Sample Title",
-        "comment" => "Sample Comment",
+        "comment" => "Sample Comment"
     ];
+
     public function commentable(): MorphTo
     {
         return $this->morphTo();

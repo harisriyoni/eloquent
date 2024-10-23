@@ -11,28 +11,27 @@ class AsAddress implements CastsAttributes
     /**
      * Cast the given value.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if ($value == null) {
-            return null;
-        }
+        // jalan, kota, negara, postal code
+        if ($value == null) return null;
 
-        $address = explode(", ", $value);
-        return new Address($address[0], $address[1], $address[2], $address[3]);
+        $addresses = explode(", ", $value);
+
+        return new Address($addresses[0], $addresses[1], $addresses[2], $addresses[3]);
     }
 
     /**
      * Prepare the given value for storage.
      *
-     * @param  array<string, mixed>  $attributes
+     * @param array<string, mixed> $attributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         if ($value instanceof Address) {
-
-            return "{$value->street},{$value->city},{$value->country},{$value->postalcode}";
+            return "$value->street, $value->city, $value->country, $value->postal_code";
         } else {
             return null;
         }

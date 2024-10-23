@@ -8,12 +8,15 @@ use Illuminate\Database\Seeder;
 
 class CustomerSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        $cstmr = new Customer();
-        $cstmr->id = "1";
-        $cstmr->name = "haris";
-        $cstmr->email = "haris@gmail.com";
-        $cstmr->save();
+        $customer = new Customer();
+        $customer->id = "EKO";
+        $customer->name = "Eko";
+        $customer->email = "eko@pzn.com";
+        $customer->save();
     }
 }

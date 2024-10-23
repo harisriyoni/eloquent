@@ -10,17 +10,20 @@ use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         $tag = new Tag();
-        $tag->id = "1";
-        $tag->name = "Branded";
+        $tag->id = "pzn";
+        $tag->name = "Programmer Zaman Now";
         $tag->save();
 
-        $product = Product::query()->first();
+        $product = Product::find("1");
         $product->tags()->attach($tag);
-        $voucher = Voucher::query()->first();
-        $voucher->tags()->attach($tag);
 
+        $voucher = Voucher::first();
+        $voucher->tags()->attach($tag);
     }
 }

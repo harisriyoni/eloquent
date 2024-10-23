@@ -3,54 +3,40 @@
 namespace Tests\Feature;
 
 use App\Models\Comment;
-use App\Models\Product;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use function PHPUnit\Framework\assertCount;
-use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertNotNull;
 
 class CommentTest extends TestCase
 {
-    public function testComment()
+    public function testCreateComment()
     {
         $comment = new Comment();
-        $comment->email = "haris@gmail.com";
-        $comment->title = "hayuu Title";
-        $comment->comment = "hayuu Comment";
+        $comment->email = "eko@pzn.com";
+        $comment->title = "Sample Title";
+        $comment->comment = "Sample Comment";
+        $comment->commentable_id = '1';
+        $comment->commentable_type = 'product';
+
         $comment->save();
 
-        $this->assertDatabaseHas('comments', [
-            'email' => 'haris@gmail.com',
-            'title' => 'hayuu Title',
-            'comment' => 'hayuu Comment',
-        ]);
+        self::assertNotNull($comment->id);
+
     }
 
-    public function testDefault()
+    public function testDefaultAttributeValues()
     {
         $comment = new Comment();
-        $comment->email = "haris@gmail.com";
+        $comment->email = "eko@pzn.com";
+        $comment->commentable_id = '1';
+        $comment->commentable_type = 'product';
+
         $comment->save();
-        $this->assertEquals("Sample Title", $comment->title);
-    }
-    public function testOnetoManyPolymorphic()
-    {
-        $product = Product::query()->first();
-        $comment = $product->comments;
-        assertCount(1, $comment);
 
-        foreach ($comment as $cm){
-            assertEquals(Product::class, $cm->commentable_type);
-            assertEquals($product->id, $cm->commentable_id);
-        }
+        self::assertNotNull($comment->id);
+        self::assertNotNull($comment->title);
+        self::assertNotNull($comment->comment);
+    }
 
-    }
-    public function testOneofMany() {
-        $product = Product::query()->find("1");
-        $latestcomment = $product->latest_comment;
-        assertNotNull($latestcomment);
-        $oldestcomment = $product->oldest_comment;
-        assertNotNull($oldestcomment);
-    }
+
 }

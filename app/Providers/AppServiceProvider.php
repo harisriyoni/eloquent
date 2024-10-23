@@ -25,13 +25,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        DB::listen(function ($query) {
-            Log::info("Query: {$query->sql}");
+        //
+        DB::listen(function ($query){
+            Log::info("Query : {$query->sql}");
         });
+
         Relation::enforceMorphMap([
             'product' => Product::class,
             'voucher' => Voucher::class,
-            'customer' => Customer::class,
+            'customer' => Customer::class
         ]);
     }
 }

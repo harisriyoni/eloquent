@@ -4,64 +4,167 @@ namespace Tests\Feature;
 
 use App\Models\Customer;
 use App\Models\Wallet;
-
-use function PHPUnit\Framework\assertCount;
-use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertNotNull;
+use Database\Seeders\CategorySeeder;
+use Database\Seeders\CustomerSeeder;
+use Database\Seeders\ImageSeeder;
+use Database\Seeders\ProductSeeder;
+use Database\Seeders\VirtualAccountSeeder;
+use Database\Seeders\WalletSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CustomerTest extends TestCase
 {
-    // public function testHasOne()
-    // {
-    //     $customer = Customer::query()->find("1");
-    //     assertNotNull($customer);
-    //     $wallet = $customer->wallet;
-    //     assertNotNull($wallet);
-    //     assertNotNull(10000, $wallet->amount);
-    //     assertNotNull(1, $wallet->customer_id);
-    //     assertNotNull(3, $wallet->id);
+    public function testOneToOne()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class]);
 
-    //     // $amount = $wallet->amount;
-    //     // assertNotNull(10000, $amount);
-    // }
-    // public function testOneToOne(){
-    //     $customer = new Customer();
-    //     $customer->id = 2;
-    //     $customer->name = "riyoni";
-    //     $customer->email = "riyoni@gmail.com";
-    //     $customer->save();
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
 
-    //     $wallets = new Wallet();
-    //     $wallets->amount = 100000;
-    //     $customer->wallet()->save($wallets);
+        // $wallet = Wallet::where("customer_id", $customer->id)->first();
+        $wallet = $customer->wallet;
+        self::assertNotNull($wallet);
 
-    // }
-
-    // public function testOneThourght(){
-    //     $customer = Customer::query()->find("1");
-    //     assertNotNull($customer);
-    //     $va = $customer->virtual_account;
-    //     self::assertNotNull($va);
-    //     self::assertEquals("BCA", $va->bank);
-    // }
-
-    // public function testManytoMany(){
-    //     $customer = Customer::query()->find("1");
-    //     assertNotNull($customer);
-    //     $customer->likes_products()->attach("1");
-    //     self::assertNotNull($customer);
-    //     $products = $customer->likes_products;
-    //     assertCount(1, $products);
-    //     assertEquals("1", $products[0]->id);
-    // }
-    public function testEagerLoading(){
-        $customer = Customer::query()->with(['wallet', 'image'])->find("1");
-        assertNotNull($customer);
+        self::assertEquals(1000000, $wallet->amount);
     }
-    public function testEagerModel(){
-        $customer = Customer::query()->find("1");
-        assertNotNull($customer);
-        assertNotNull($customer->wallet);
+
+    public function testOneToOneQuery()
+    {
+        $customer = new Customer();
+        $customer->id = "EKO";
+        $customer->name = "Eko";
+        $customer->email = "eko@pzn.com";
+        $customer->save();
+
+        $wallet = new Wallet();
+        $wallet->amount = 1000000;
+
+        $customer->wallet()->save($wallet);
+
+        self::assertNotNull($wallet->customer_id);
     }
+
+    public function testHasOneThrough()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class, VirtualAccountSeeder::class]);
+
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
+
+        $virtualAccount = $customer->virtualAccount;
+        self::assertNotNull($virtualAccount);
+        self::assertEquals("BCA", $virtualAccount->bank);
+
+    }
+
+    public function testManyToMany()
+    {
+        $this->seed([CustomerSeeder::class, CategorySeeder::class, ProductSeeder::class]);
+
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
+
+        $customer->likeProducts()->attach("1");
+
+        $products = $customer->likeProducts;
+        self::assertCount(1, $products);
+
+        self::assertEquals("1", $products[0]->id);
+    }
+
+    public function testManyToManyDetach()
+    {
+        $this->testManyToMany();
+
+        $customer = Customer::find("EKO");
+        $customer->likeProducts()->detach("1");
+
+        $products = $customer->likeProducts;
+        self::assertCount(0, $products);
+    }
+
+    public function testPivotAttribute()
+    {
+        $this->testManyToMany();
+
+        $customer = Customer::find("EKO");
+        $products = $customer->likeProducts;
+
+        foreach ($products as $product){
+            $pivot = $product->pivot;
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+            self::assertNotNull($pivot->created_at);
+        }
+    }
+
+    public function testPivotAttributeCondition()
+    {
+        $this->testManyToMany();
+
+        $customer = Customer::find("EKO");
+        $products = $customer->likeProductsLastWeek;
+
+        foreach ($products as $product){
+            $pivot = $product->pivot;
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+            self::assertNotNull($pivot->created_at);
+        }
+    }
+
+    public function testPivotModel()
+    {
+        $this->testManyToMany();
+
+        $customer = Customer::find("EKO");
+        $products = $customer->likeProducts;
+
+        foreach ($products as $product){
+            $pivot = $product->pivot; // object Model Like
+            self::assertNotNull($pivot);
+            self::assertNotNull($pivot->customer_id);
+            self::assertNotNull($pivot->product_id);
+            self::assertNotNull($pivot->created_at);
+
+            self::assertNotNull($pivot->customer);
+
+            self::assertNotNull($pivot->product);
+        }
+    }
+
+    public function testOneToOnePolymorphic()
+    {
+        $this->seed([CustomerSeeder::class, ImageSeeder::class]);
+
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
+
+        $image = $customer->image;
+        self::assertNotNull($image);
+
+        self::assertEquals("https://www.programmerzamannow.com/image/1.jpg", $image->url);
+    }
+
+    public function testEager()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class, ImageSeeder::class]);
+
+        $customer = Customer::with(["wallet", "image"])->find("EKO");
+        self::assertNotNull($customer);
+    }
+
+    public function testEagerModel()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class, ImageSeeder::class]);
+
+        $customer = Customer::find("EKO");
+        self::assertNotNull($customer);
+    }
+
+
 }

@@ -3,18 +3,17 @@
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
-
-use Illuminate\Support\Facades\DB;
-use Tests\CreatesApplication;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    use CreatesApplication;
-    protected function setUp(): void
+    /**
+     * A basic test example.
+     */
+    public function test_the_application_returns_a_successful_response(): void
     {
-        parent::setUp();
-        DB::delete("delete from categories");
-    }
+        $response = $this->get('/');
 
+        $response->assertStatus(200);
+    }
 }

@@ -14,13 +14,12 @@ class VirtualAccountSeeder extends Seeder
      */
     public function run(): void
     {
-        $wallet = Wallet::query()->where("customer_id", "1")->firstOrFail();
+        $wallet = Wallet::where("customer_id", "EKO")->firstOrFail();
 
         $virtualAccount = new VirtualAccount();
         $virtualAccount->bank = "BCA";
-        $virtualAccount->va_number = "213161467137";
+        $virtualAccount->va_number = "123456789";
         $virtualAccount->wallet_id = $wallet->id;
         $virtualAccount->save();
-
     }
 }
